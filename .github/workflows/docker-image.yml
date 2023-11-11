@@ -1,4 +1,4 @@
-name: Untappd WoS
+name: BeerCards
 
 on:
   push:
