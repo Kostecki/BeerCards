@@ -1,7 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Head from "next/head";
-import { Metadata } from "next";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Paper, Typography } from "@mui/material";
@@ -9,14 +7,13 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 import * as countries from "@/app/countries.json";
 
-const { CLIENT_ID, CLIENT_SECRET } = process.env;
-const defaultTitle = "Bajere";
-const myListId = 11256631; // Smagning
+const { CLIENT_ID, CLIENT_SECRET, DEFAULT_PAGE_TITLE, MY_LIST_ID } =
+  process.env;
 
 async function getData(listId?: string) {
   const res = await fetch(
     `https://api.untappd.com/v4/custom_lists/view/${
-      listId ?? myListId
+      listId ?? MY_LIST_ID
     }?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
   );
 
@@ -38,7 +35,7 @@ export async function generateMetadata({
   );
 
   return {
-    title: `${defaultTitle} (${response.list.list_name})`,
+    title: `${DEFAULT_PAGE_TITLE} (${response.list.list_name})`,
   };
 }
 
@@ -197,10 +194,9 @@ export default async function Home({
                     </Box>
                     {/* Rating */}
                     <Typography sx={{ fontWeight: 400 }}>
-                      {truncateRating(item.beer.rating_score).toLocaleString(
+                      {`${truncateRating(item.beer.rating_score).toLocaleString(
                         "da"
-                      )}
-                      /5
+                      )}/5 (${item.beer.rating_count.toLocaleString("da")})`}
                     </Typography>
                   </Box>
                 </Box>
