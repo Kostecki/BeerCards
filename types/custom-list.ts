@@ -1,8 +1,12 @@
 // Straight from https://api.untappd.com/v4/custom_lists/view/{list-id}
 
 type CustomListResponse = {
-  list: List;
-  items: ListItem[];
+  response: {
+    total_count: number;
+    list: List;
+    items: ListItem[];
+    count: number;
+  };
 };
 
 type List = {

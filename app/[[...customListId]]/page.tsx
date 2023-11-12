@@ -10,18 +10,33 @@ import * as countries from "@/app/countries.json";
 const { CLIENT_ID, CLIENT_SECRET, DEFAULT_PAGE_TITLE, MY_LIST_ID } =
   process.env;
 
-async function getData(listId?: string) {
+async function getData(
+  listId?: string,
+  previousResult?: CustomListResponse,
+  offset = 0
+) {
   const res = await fetch(
     `https://api.untappd.com/v4/custom_lists/view/${
       listId ?? MY_LIST_ID
-    }?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
+    }?limit=50&offset=${offset}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
   );
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const result = await res.json();
+  if (result.response.pagination.offset) {
+    return getData(listId, result, offset + 50);
+  }
+
+  const out = result;
+  if (previousResult) {
+    out.response.items.unshift(...previousResult.response.items);
+    out.response.count = out.response.total_count;
+  }
+
+  return out;
 }
 
 export async function generateMetadata({
@@ -30,12 +45,17 @@ export async function generateMetadata({
   params: { customListId: string };
 }) {
   const { customListId } = params;
-  const { response }: { response: CustomListResponse } = await getData(
+  const {
+    response: {
+      // @ts-ignore
+      list,
+    },
+  }: { response: CustomListResponse } = await getData(
     customListId ? customListId[0] : undefined
   );
 
   return {
-    title: `${DEFAULT_PAGE_TITLE} (${response.list.list_name})`,
+    title: `${DEFAULT_PAGE_TITLE} (${list.list_name})`,
   };
 }
 
