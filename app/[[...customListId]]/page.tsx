@@ -86,7 +86,11 @@ export default async function Home({
                     backgroundSize: "contain",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${item.beer.beer_label})`,
+                    backgroundImage: `url(${
+                      !item.beer.beer_label.includes("badge-beer-default")
+                        ? item.beer.beer_label
+                        : "/badge-beer-default.png"
+                    })`,
                     mb: 2,
                   }}
                 />
