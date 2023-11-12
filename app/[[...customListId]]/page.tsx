@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import Head from "next/head";
+import { Metadata } from "next";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Paper, Typography } from "@mui/material";
@@ -8,12 +10,13 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import * as countries from "@/app/countries.json";
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
-const LIST_ID = 11256631; // Smagning
+const defaultTitle = "Bajere";
+const myListId = 11256631; // Smagning
 
 async function getData(listId?: string) {
   const res = await fetch(
     `https://api.untappd.com/v4/custom_lists/view/${
-      listId ?? LIST_ID
+      listId ?? myListId
     }?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
   );
 
@@ -24,6 +27,21 @@ async function getData(listId?: string) {
   return res.json();
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { customListId: string };
+}) {
+  const { customListId } = params;
+  const { response }: { response: CustomListResponse } = await getData(
+    customListId ? customListId[0] : undefined
+  );
+
+  return {
+    title: `${defaultTitle} (${response.list.list_name})`,
+  };
+}
+
 export default async function Home({
   params,
 }: {
@@ -32,7 +50,9 @@ export default async function Home({
   const { customListId } = params;
   const {
     response: { items },
-  }: { response: { items: ListItem[] } } = await getData(customListId);
+  }: { response: { items: ListItem[] } } = await getData(
+    customListId ? customListId[0] : undefined
+  );
 
   const countryToFlag = (name: string) => {
     let country = name;

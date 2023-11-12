@@ -1,5 +1,23 @@
 // Straight from https://api.untappd.com/v4/custom_lists/view/{list-id}
 
+type CustomListResponse = {
+  list: List;
+  items: ListItem[];
+};
+
+type List = {
+  list_id: number;
+  list_name: string;
+  user_id: number;
+  owner: Owner;
+};
+
+type Owner = {
+  first_name: string;
+  full_name: string;
+  user_name: string;
+};
+
 type ListItem = {
   created_at: string;
   item_id: number;
