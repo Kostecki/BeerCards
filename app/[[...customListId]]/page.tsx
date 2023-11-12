@@ -10,7 +10,7 @@ import * as countries from "@/app/countries.json";
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 const LIST_ID = 11256631; // Smagning
 
-export async function getData(listId?: string) {
+async function getData(listId?: string) {
   const res = await fetch(
     `https://api.untappd.com/v4/custom_lists/view/${
       listId ?? LIST_ID
