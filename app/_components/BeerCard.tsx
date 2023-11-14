@@ -2,22 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { ElementType, useState } from "react";
 
 import Grid from "@mui/material/Unstable_Grid2";
-import {
-  Box,
-  CardActionArea,
-  Card as MUICard,
-  Typography,
-} from "@mui/material";
+import { Box, CardActionArea, Card, Typography } from "@mui/material";
 
 import getFlags from "../_utils/flags";
 
-export default function Card({ item }: { item: ListItem }) {
+export default function BeerCard({ item }: { item: ListItem }) {
   const [toggled, setToggled] = useState(false);
 
-  const showServingStyle = (servingStyle: string) => {
+  const showServingStyle = (servingStyle: any) => {
     const size = 25;
     return (
       <Image
@@ -27,6 +22,21 @@ export default function Card({ item }: { item: ListItem }) {
         height={size}
       />
     );
+  };
+
+  const showServingStyle2 = (servingStyle: string, quantity: number) => {
+    const imageSize = 25;
+
+    return [...Array(quantity)].map((x, i) => (
+      <Image
+        key={i}
+        alt={servingStyle}
+        src={`https://assets.untappd.com/static_app_assets/${servingStyle.toLowerCase()}@3x.png`}
+        width={imageSize}
+        height={imageSize}
+        style={{ marginLeft: -10 }} /* Fix dumb image size */
+      />
+    ));
   };
 
   const showABVIBU = (abv: number, ibu?: number) => {
@@ -44,7 +54,7 @@ export default function Card({ item }: { item: ListItem }) {
 
   return (
     <Grid xs={12} lg={6} key={item.beer.bid} sx={{ display: "flex" }}>
-      <MUICard sx={{ width: "100%" }}>
+      <Card sx={{ width: "100%" }}>
         <CardActionArea
           sx={{
             p: 2,
@@ -78,12 +88,8 @@ export default function Card({ item }: { item: ListItem }) {
               color: "#919191",
             }}
           >
-            {item.container.container_name && (
-              <>
-                {item.quantity}x{" "}
-                {showServingStyle(item.container.container_name)}
-              </>
-            )}
+            {item.container.container_name &&
+              showServingStyle2(item.container.container_name, item.quantity)}
           </Box>
 
           <Box sx={{ textAlign: "center", width: "100%" }}>
@@ -211,7 +217,7 @@ export default function Card({ item }: { item: ListItem }) {
             </Typography>
           </Box>
         </CardActionArea>
-      </MUICard>
+      </Card>
     </Grid>
   );
 }

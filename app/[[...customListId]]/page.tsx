@@ -4,7 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { Box } from "@mui/material";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 
-import Card from "../_components/card";
+import BeerCard from "../_components/BeerCard";
 
 const { CLIENT_ID, CLIENT_SECRET, DEFAULT_PAGE_TITLE, MY_LIST_ID } =
   process.env;
@@ -108,7 +108,7 @@ export default async function Home({
             </Paper>
           </Grid> */}
           {items.map((item: ListItem) => (
-            <Card key={item.item_id} item={item} />
+            <BeerCard key={item.item_id} item={item} />
           ))}
         </Grid>
       </Box>
