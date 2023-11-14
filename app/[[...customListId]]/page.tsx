@@ -82,7 +82,15 @@ export default async function Home({
       )}
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Grid container spacing={3} sx={{ maxWidth: 900, my: 5 }}>
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            maxWidth: 900,
+            my: 5,
+            "@media (max-width: 800px)": { maxWidth: 400 },
+          }}
+        >
           {/* Stats */}
           {/* <Grid xs={12}>
             <Paper sx={{ p: 2 }}>
