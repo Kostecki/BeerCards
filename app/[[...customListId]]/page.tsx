@@ -108,7 +108,11 @@ export default async function Home({
             </Paper>
           </Grid> */}
           {items.map((item: ListItem) => (
-            <BeerCard key={item.item_id} item={item} />
+            <BeerCard
+              key={item.item_id}
+              customListId={customListId ? customListId[0] : MY_LIST_ID}
+              item={item}
+            />
           ))}
         </Grid>
       </Box>

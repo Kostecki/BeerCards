@@ -2,29 +2,23 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ElementType, useState } from "react";
+import { ElementType, useEffect, useState } from "react";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, CardActionArea, Card, Typography } from "@mui/material";
 
 import getFlags from "../_utils/flags";
 
-export default function BeerCard({ item }: { item: ListItem }) {
-  const [toggled, setToggled] = useState(false);
+export default function BeerCard({
+  item,
+  customListId,
+}: {
+  item: ListItem;
+  customListId?: string;
+}) {
+  const [checked, setChecked] = useState(false);
 
-  const showServingStyle = (servingStyle: any) => {
-    const size = 25;
-    return (
-      <Image
-        alt={servingStyle}
-        src={`https://assets.untappd.com/static_app_assets/${servingStyle.toLowerCase()}@3x.png`}
-        width={size}
-        height={size}
-      />
-    );
-  };
-
-  const showServingStyle2 = (servingStyle: string, quantity: number) => {
+  const showServingStyle = (servingStyle: string, quantity: number) => {
     const imageSize = 25;
 
     return [...Array(quantity)].map((x, i) => (
@@ -50,7 +44,27 @@ export default function BeerCard({ item }: { item: ListItem }) {
 
   const truncateRating = (rating: number) => Math.trunc(rating * 100) / 100;
 
-  const toggleCard = () => setToggled(!toggled);
+  const toggleCard = () => {
+    const newState = !checked;
+
+    setChecked(newState);
+
+    localStorage.setItem(
+      `beer-cards-${customListId}-${item.beer.bid}`,
+      newState.toString()
+    );
+  };
+
+  useEffect(() => {
+    const checkedBeer = localStorage.getItem(
+      `beer-cards-${customListId}-${item.beer.bid}`
+    );
+
+    if (checkedBeer === "true") {
+      setChecked(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Grid xs={12} lg={6} key={item.beer.bid} sx={{ display: "flex" }}>
@@ -66,7 +80,7 @@ export default function BeerCard({ item }: { item: ListItem }) {
           }}
           onClick={toggleCard}
         >
-          {toggled && (
+          {checked && (
             <Box
               sx={{
                 position: "absolute",
@@ -89,7 +103,7 @@ export default function BeerCard({ item }: { item: ListItem }) {
             }}
           >
             {item.container.container_name &&
-              showServingStyle2(item.container.container_name, item.quantity)}
+              showServingStyle(item.container.container_name, item.quantity)}
           </Box>
 
           <Box sx={{ textAlign: "center", width: "100%" }}>
