@@ -2,16 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ElementType, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Grid from "@mui/material/Unstable_Grid2";
-import {
-  Box,
-  CardActionArea,
-  Card,
-  Typography,
-  CardActions,
-} from "@mui/material";
+import { Box, CardActionArea, Card, Typography } from "@mui/material";
 
 import getFlags from "../_utils/flags";
 
