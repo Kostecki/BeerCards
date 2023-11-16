@@ -5,7 +5,13 @@ import Link from "next/link";
 import { ElementType, useEffect, useState } from "react";
 
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, CardActionArea, Card, Typography } from "@mui/material";
+import {
+  Box,
+  CardActionArea,
+  Card,
+  Typography,
+  CardActions,
+} from "@mui/material";
 
 import getFlags from "../_utils/flags";
 
@@ -68,7 +74,51 @@ export default function BeerCard({
 
   return (
     <Grid xs={12} lg={6} key={item.beer.bid} sx={{ display: "flex" }}>
-      <Card sx={{ width: "100%" }}>
+      <Card sx={{ width: "100%", position: "relative" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            py: 1,
+            px: 2,
+            borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
+          }}
+        >
+          <Link
+            href={`https://untappd.com/b/${item.beer.beer_slug}/${item.beer.bid}`}
+            target="_blank"
+            style={{ marginTop: 6 }}
+          >
+            <Box
+              sx={{
+                ":hover": {
+                  opacity: 0.8,
+                },
+                ":active": {
+                  transform: "translateY(1px)",
+                },
+              }}
+            >
+              <Image
+                src="/untappd.png"
+                alt="Untappd Link"
+                width="20"
+                height="20"
+                style={{ marginRight: 8 }}
+              />
+            </Box>
+          </Link>
+          <Box
+            sx={{
+              height: 25,
+              color: "#919191",
+            }}
+          >
+            {item.container.container_name &&
+              showServingStyle(item.container.container_name, item.quantity)}
+          </Box>
+        </Box>
         <CardActionArea
           sx={{
             p: 2,
@@ -93,18 +143,6 @@ export default function BeerCard({
               }}
             />
           )}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "end",
-              alignItems: "center",
-              height: 25,
-              color: "#919191",
-            }}
-          >
-            {item.container.container_name &&
-              showServingStyle(item.container.container_name, item.quantity)}
-          </Box>
 
           <Box sx={{ textAlign: "center", width: "100%" }}>
             {/* Image */}
@@ -182,33 +220,8 @@ export default function BeerCard({
               >
                 {/* ABV/IBU */}
                 <Typography sx={{ fontWeight: 400 }}>
-                  {showABVIBU(item.beer.beer_abv, item.beer.beer_ibu)}
+                  {showABVIBU(item.beer.beer_abv, item.beer.beer_ibu)} {" - "}
                 </Typography>
-                <Box sx={{ ml: 1, mt: "2px" }}>
-                  <Link
-                    href={`https://untappd.com/b/${item.beer.beer_slug}/${item.beer.bid}`}
-                    target="_blank"
-                  >
-                    <Box
-                      sx={{
-                        ":hover": {
-                          opacity: 0.8,
-                        },
-                        ":active": {
-                          transform: "translateY(1px)",
-                        },
-                      }}
-                    >
-                      <Image
-                        src="/untappd.png"
-                        alt="Untappd Link"
-                        width="18"
-                        height="18"
-                        style={{ marginRight: 8 }}
-                      />
-                    </Box>
-                  </Link>
-                </Box>
                 {/* Rating */}
                 <Typography sx={{ fontWeight: 400 }}>
                   {`${truncateRating(item.beer.rating_score).toLocaleString(
